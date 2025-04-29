@@ -10,39 +10,55 @@
             Player player = new Player() { Cash = 100, Name = "The Player" };
 
             double odds = .75;
-            int pot;
-            Console.WriteLine($"Welcome to the casino. The odds are {odds}");
-
-            while (player.Cash > 0)
+            //int pot;
+            Console.WriteLine($"Welcome to the casino. The odds are {odds*100}%");
+            while (true)
             {
-                player.WriteMyInfo();
-                double chance = random.NextDouble();
-
-                Console.Write("How much do you want to bet: ");
-                string? howMuch = Console.ReadLine();
-                if (howMuch == "") return;
-                if (int.TryParse(howMuch, out int amount))
+                Console.Write("Set new odds (example 75):  ");
+                string? input = Console.ReadLine();
+                if (input == "") return;
+                if (double.TryParse(input, out double newOdds))
                 {
-                    if (odds < chance)
+                    odds = newOdds/100;
+                    Console.WriteLine($"The new odds are {odds*100}%");
+                    while (player.Cash > 0)
                     {
-                        pot = player.GiveCash(amount) * 2;
-                        player.ReceiveCash(pot);
-                        Console.WriteLine($"You win {pot}");
-                    }
-                    else
-                    {
-                        pot = player.GiveCash(amount);
-                        player.GiveCash(pot);
-                        Console.WriteLine("Bad luck, you lose");
+
+                        player.WriteMyInfo();
+                        double chance = random.NextDouble();
+
+                        Console.Write("How much do you want to bet: ");
+                        string? howMuch = Console.ReadLine();
+                        if (howMuch == "") return;
+                        if (int.TryParse(howMuch, out int amount))
+                        {
+                            Console.WriteLine($"You rolled {chance:0.00} vs {odds} chance \n");
+                            if (odds < chance)
+                            {
+                                int pot = player.GiveCash(amount) * 2;
+                                player.ReceiveCash(pot);
+                                Console.WriteLine($"You win {pot}");
+                            }
+                            else
+                            {
+                                //int pot = player.GiveCash(amount);
+                                player.GiveCash(amount);
+                                Console.WriteLine("Bad luck, you lose");
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("Please enter a valid number.");
+                        }
+
                     }
                 }
-                else 
+                else
                 {
                     Console.WriteLine("Please enter a valid number.");
                 }
-                
+                Console.WriteLine("The house always wins.");
             }
-         Console.WriteLine("The house always wins.");
         }
     }
 }
