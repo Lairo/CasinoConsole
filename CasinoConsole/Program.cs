@@ -4,43 +4,45 @@
     {
         static void Main(string[] args)
         {
-            Player joe = new Player() { Cash = 50, Name = "Joe" };
-            Player bob = new Player() { Cash = 100, Name = "Bob" };
+            //Player joe = new Player() { Cash = 50, Name = "Joe" };
 
-            while (true)
+            Random random = new Random();
+            Player player = new Player() { Cash = 100, Name = "The Player" };
+
+            double odds = .75;
+            int pot;
+            Console.WriteLine($"Welcome to the casino. The odds are {odds}");
+
+            while (player.Cash > 0)
             {
-                joe.WriteMyInfo();
-                bob.WriteMyInfo();
+                player.WriteMyInfo();
+                double chance = random.NextDouble();
 
-                Console.Write("Enter an amount: ");
+                Console.Write("How much do you want to bet: ");
                 string? howMuch = Console.ReadLine();
                 if (howMuch == "") return;
                 if (int.TryParse(howMuch, out int amount))
                 {
-                    Console.Write("Who should give the cash: ");
-                    string? whichGuy = Console.ReadLine();
-                    if (whichGuy == "Joe")
+                    if (odds < chance)
                     {
-                        int result = joe.GiveCash(amount);
-                        bob.ReceiveCash(result);
-
-                    }
-                    else if (whichGuy == "Bob")
-                    {
-                        int result = bob.GiveCash(amount);
-                        bob.ReceiveCash(result);
+                        pot = player.GiveCash(amount) * 2;
+                        player.ReceiveCash(pot);
+                        Console.WriteLine($"You win {pot}");
                     }
                     else
                     {
-                        Console.WriteLine("Please enter 'Joe' or 'Bob");
+                        pot = player.GiveCash(amount);
+                        player.GiveCash(pot);
+                        Console.WriteLine("Bad luck, you lose");
                     }
-
                 }
-                else
+                else 
                 {
-                    Console.WriteLine("Please enter an amount (or a blank line to exit).");
+                    Console.WriteLine("Please enter a valid number.");
                 }
+                
             }
+         Console.WriteLine("The house always wins.");
         }
     }
 }
